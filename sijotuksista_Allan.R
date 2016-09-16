@@ -11,15 +11,18 @@ require(TeachingDemos)
 char2seed("EINSTEIN",set=T)
 #Asetetaan alkupääoma keskituoton ja säästämishorisontin funktiona.
 endCapital<-1000000
-T<-67
+T<-20 #syötä tähän oma sijoitushorisonttisi
 mu<-0.066
 
 #Joonan edit, muutetaan start capital. Tyhmästi: startCapital <- 867, alla formaalimmin
-startCapital <- endCapital/(((1+mu)^(T)-1)/mu)
-startCapital
+#Joonan edit 2, muutetaan siten, että mukana on alkupääoma, mutta kuukausisumma voidaan syöttää lisäksi
+startCapital <- 1 #syötä tähän oma alkupääomasi
 
-#Tämä on se noin 13800, jonka Paasi esittää.
-#startCapital<-endCapital/(1+mu)^T
+capitalNeeded <- endCapital - startCapital*((1+mu)^T) #tavoitesumma
+
+#savingCapital <- syötä tähän vuosisäästö ja poista kommentti jos haluat syöttää säästösumman manuaalisesti    
+savingCapital <- capitalNeeded /(((1+mu)^(T)-1)/mu)
+savingCapital
 
 #Simuloidaan 100 000 havaintoa.
 N<-100000
@@ -33,7 +36,7 @@ returnMatrix<-matrix(data=NA,nrow=T,ncol=N)
 returnMatrix[1,]<-startCapital
 #Simuloidaan.
 for(j in 2:T){
-    returnMatrix[j,]<-(returnMatrix[j-1,]*(1+rnorm(N,mean=mu,sd=sd))+startCapital)
+    returnMatrix[j,]<-(returnMatrix[j-1,]*(1+rnorm(N,mean=mu,sd=sd))+savingCapital)
 }
 
 
